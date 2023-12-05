@@ -17,6 +17,9 @@ export default function Home() {
     const updatedGifts = gifts.filter((_, index) => index !== indexToRemove);
     setGifts(updatedGifts);
   };
+  const removeAll=()=>{
+    setGifts([])
+  }
   return (
     <main className="flex min-h-screen  items-start justify-center" style={{ backgroundImage: "url('/christmas.avif')" }}>
       <div className="max-w-5xl w-full items-center justify-center font-mono text-sm lg:flex flex-col my-6">
@@ -46,6 +49,12 @@ export default function Home() {
         
         ))}
         </ul>
+        <button
+                className="m-8 p-2 text-white-500 bg-transparent border border-solid border-red-500 rounded"
+                onClick={() => removeAll()}
+              >
+                Borrar todos
+              </button>
       </div>
   </main>
   )
