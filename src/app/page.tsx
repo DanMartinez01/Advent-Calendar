@@ -12,22 +12,40 @@ export default function Home() {
     setGifts([...gifts, newGift]); 
     setNewGift(''); 
   };
+
+  const removeGift = (indexToRemove) => {
+    const updatedGifts = gifts.filter((_, index) => index !== indexToRemove);
+    setGifts(updatedGifts);
+  };
   return (
-    <main className="flex min-h-screen  items-center justify-between p-24" style={{ backgroundImage: "url('/christmas.avif')" }}>
-      <div className="mb-10 max-w-5xl w-full items-center justify-center font-mono text-sm lg:flex flex-col">
-        <h1 className='my-4'>Lista de regalos:</h1>
-        <ul>
-        {gifts.map((gift:string, index:number) => (
-        <li key={index}>{gift}</li>
-        ))}
-        </ul>
-          <input
+    <main className="flex min-h-screen  items-start justify-center" style={{ backgroundImage: "url('/christmas.avif')" }}>
+      <div className="max-w-5xl w-full items-center justify-center font-mono text-sm lg:flex flex-col my-6">
+        <h1 className='mb-10 text-2xl'>Lista de regalos:</h1>
+        <div className='mb-6 px-20 flex flex-row justify-around'>
+        <input
           type="text"
-          placeholder="Enter new element"
+          placeholder="Anota tu regalo"
           value={newGift}
           onChange={(e) => setNewGift(e.target.value)}
+          className='text-black px-2'
         />
-         <button onClick={addGift}>Add Element</button>
+         <button className='mx-4' onClick={addGift}>Agregar a la lista</button>  
+        </div>
+        
+        <ul>
+        {gifts.map((gift:string, index:number) => (
+        <li className='flex flex-row items-center justify-around text-lg'
+        key={index}>{gift}
+           <button
+                className="m-4 p-1 text-red-500 bg-transparent border border-solid border-red-500 rounded"
+                onClick={() => removeGift(index)}
+              >
+                Quitar
+              </button>
+        </li>
+        
+        ))}
+        </ul>
       </div>
   </main>
   )
