@@ -54,7 +54,7 @@ export default function Home() {
             onClick={() => removeAll()}>
             Borrar todos
           </button> :
-          <h1>No hay regalos en la lista 🙁</h1>
+          <h1>No hay regalos en la lista 🙁 Agrega uno!</h1>
         }
       </div>
     </main>
