@@ -10,8 +10,18 @@ export default function Home() {
   const [newGift, setNewGift] = useState('');
 
   const addGift = () => {
-    setGifts([...gifts, newGift]);
-    setNewGift('');
+    if (newGift.trim() === "") {
+      alert("Tienes que escribir un regalo");
+    }
+    else if (gifts.includes(newGift)) {
+      alert("Este regalo ya está en la lista");
+    }
+    else {
+      setGifts([...gifts, newGift]);
+      setNewGift('');
+    }
+
+
   };
 
   const removeGift = (indexToRemove) => {
