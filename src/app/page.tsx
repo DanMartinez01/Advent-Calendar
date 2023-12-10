@@ -6,23 +6,38 @@ import { useState } from 'react'
 
 export default function Home() {
 
-  const [gifts, setGifts] = useState(["Viaje a Brasil", "Bikini", "Ojotas"]);
+
+  const [gifts, setGifts] = useState([{ name: "Viaje a Brasil", quantity: 1 }]);
   const [newGift, setNewGift] = useState('');
 
   const addGift = () => {
     if (newGift.trim() === "") {
       alert("Tienes que escribir un regalo");
-    }
-    else if (gifts.includes(newGift)) {
-      alert("Este regalo ya está en la lista");
-    }
-    else {
-      setGifts([...gifts, newGift]);
+    } else {
+      const existingGiftIndex = gifts.findIndex(gift => gift.name === newGift);
+
+      if (existingGiftIndex !== -1) {
+        const updatedGifts = [...gifts];
+        updatedGifts[existingGiftIndex].quantity += 1;
+        setGifts(updatedGifts);
+      } else {
+        setGifts([...gifts, { name: newGift, quantity: 1 }]);
+      }
+
       setNewGift('');
     }
-
-
   };
+  const updateQuantity = (index, amount) => {
+    const updatedGifts = [...gifts];
+    updatedGifts[index].quantity += amount;
+
+    if (updatedGifts[index].quantity <= 0) {
+      updatedGifts.splice(index, 1);
+    }
+
+    setGifts(updatedGifts);
+  };
+
 
   const removeGift = (indexToRemove) => {
     const updatedGifts = gifts.filter((_, index) => index !== indexToRemove);
@@ -49,7 +64,20 @@ export default function Home() {
         <ul>
           {gifts.map((gift: string, index: number) => (
             <li className='flex flex-row items-center justify-around text-lg'
-              key={index}>{gift}
+              key={index}>{gift.name}
+              <button
+                className="m-2 p-1 rounded-sm text-sm bg-green-500 text-white"
+                onClick={() => updateQuantity(index, -1)}
+              >
+                -
+              </button>
+              {gift.quantity}
+              <button
+                className="m-2 p-1 rounded-sm text-sm bg-red-500 text-white"
+                onClick={() => updateQuantity(index, 1)}
+              >
+                +
+              </button>
               <button
                 className="m-4 p-1 text-red-500 bg-transparent border border-solid border-red-500 rounded"
                 onClick={() => removeGift(index)}
