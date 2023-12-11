@@ -2,13 +2,24 @@
 // @ts-nocheck
 // @ts-ignore
 'use client';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
 
 
-  const [gifts, setGifts] = useState([{ name: "Viaje a Brasil", quantity: 1 }]);
+  const [gifts, setGifts] = useState(() => {
+    const storedGifts = localStorage.getItem('gifts');
+    return storedGifts ? JSON.parse(storedGifts) : [
+      { name: "Viaje a Brasil", quantity: 1 },
+      { name: "Bikini", quantity: 1 },
+      { name: "Ojotas", quantity: 1 }
+    ];
+  });
   const [newGift, setNewGift] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('gifts', JSON.stringify(gifts));
+  }, [gifts]);
 
   const addGift = () => {
     if (newGift.trim() === "") {
