@@ -12,36 +12,55 @@ export default function Home() {
       { recipient: "Dani", name: "Viaje a Brasil", quantity: 1, imageUrl: "https://dib.com.ar/wp-content/uploads/2022/10/rio-janeiro-696x870.jpg" }
     ];
   });
-  const [newGift, setNewGift] = useState('');
-  const [person, setPerson] = useState('');
-  const [newImageUrl, setNewImageUrl] = useState('');
+  const [newGift, setNewGift] = useState(''); //agregar regalo
+  const [person, setPerson] = useState(''); //agregar persona
+  const [newImageUrl, setNewImageUrl] = useState(''); //agregar imagen
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);//indice para editar regalos
 
   useEffect(() => {
     localStorage.setItem('gifts', JSON.stringify(gifts));
   }, [gifts]);
 
+
+  const editGift = (index) => {
+    const giftToEdit = gifts[index];//selecciona regalo segun indice
+    setPerson(giftToEdit.recipient);
+    setNewGift(giftToEdit.name);
+    setNewImageUrl(giftToEdit.imageUrl);
+    setEditIndex(index);
+    setIsModalOpen(true);
+  };
+
   const addGift = () => {
     if (newGift.trim() === "") {
       alert("Tienes que escribir un regalo");
-    } else {
-      const existingGiftIndex = gifts.findIndex(gift => gift.name === newGift);
+      return;
+    }
 
+    if (editIndex !== null) {
+      const updatedGifts = [...gifts];//copia de array de regalos
+      updatedGifts[editIndex] = { name: newGift, quantity: updatedGifts[editIndex].quantity, imageUrl: newImageUrl, recipient: person }; //agregar cambios
+      setGifts(updatedGifts);//setear regalo editado
+      setEditIndex(null);
+    }
+    else {
+      const existingGiftIndex = gifts.findIndex((gift) => gift.name === newGift);//busca regalo x index
       if (existingGiftIndex !== -1) {
         const updatedGifts = [...gifts];
-        updatedGifts[existingGiftIndex].quantity += 1;
+        updatedGifts[existingGiftIndex].quantity += 1;//agrega cantidades a regalo existente
         setGifts(updatedGifts);
       } else {
         setGifts([...gifts, { name: newGift, quantity: 1, imageUrl: newImageUrl, recipient: person }]);
+        //si el regalo no esta, lo agrega
       }
-
-      setNewGift('');
-      setNewImageUrl('');
-      setIsModalOpen(false);
-      setPerson('')
-      console.log(gift);
     }
+    setNewGift('');
+    setNewImageUrl('');
+    setIsModalOpen(false);
+    setPerson('');
   };
+
   const updateQuantity = (index, amount) => {
     const updatedGifts = [...gifts];
     updatedGifts[index].quantity += amount;
@@ -70,7 +89,7 @@ export default function Home() {
           {isModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
               <div className="bg-white p-8 rounded-md">
-                <h2 className="text-lg mb-4">Agregar regalo</h2>
+                <h2 className="text-lg mb-4 text-black">{editIndex !== null ? 'Editar regalo' : 'Agregar regalo'}</h2>
                 <input
                   type="text"
                   placeholder="Para quien?"
@@ -92,10 +111,16 @@ export default function Home() {
                   onChange={(e) => setNewImageUrl(e.target.value)}
                   className='text-black px-1 mb-4 w-full'
                 />
-                <button className="bg-blue-500 text-white p-2 rounded" onClick={addGift}>
+                {/* <button className="bg-blue-500 text-white p-2 rounded" onClick={addGift}>
                   Agregar
                 </button>
                 <button className="ml-4 text-gray-600" onClick={() => setIsModalOpen(false)}>
+                  Cancelar
+                </button> */}
+                <button className="bg-blue-500 text-white p-2 rounded" onClick={addGift}>
+                  {editIndex !== null ? 'Guardar cambios' : 'Agregar'}
+                </button>
+                <button className="ml-4 text-gray-600" onClick={() => { setIsModalOpen(false); setEditIndex(null); }}>
                   Cancelar
                 </button>
               </div>
@@ -138,6 +163,12 @@ export default function Home() {
                 onClick={() => updateQuantity(index, 1)}
               >
                 +
+              </button>
+              <button
+                className="m-4 p-1 text-black bg-white rounded"
+                onClick={() => editGift(index)}
+              >
+                Editar
               </button>
               <button
                 className="m-4 p-1 text-black bg-white  rounded"
