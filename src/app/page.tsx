@@ -95,21 +95,21 @@ export default function Home() {
                   placeholder="Para quien?"
                   value={person}
                   onChange={(e) => setPerson(e.target.value)}
-                  className='text-black px-1 mb-2 w-full'
+                  className='text-black px-1 mb-2 w-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out'
                 />
                 <input
                   type="text"
                   placeholder="Regalo"
                   value={newGift}
                   onChange={(e) => setNewGift(e.target.value)}
-                  className='text-black px-1 mb-2 w-full'
+                  className='text-black px-1 mb-2 w-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out'
                 />
                 <input
                   type="text"
                   placeholder="URLimagen"
                   value={newImageUrl}
                   onChange={(e) => setNewImageUrl(e.target.value)}
-                  className='text-black px-1 mb-4 w-full'
+                  className='text-black px-1 mb-4 w-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out'
                 />
                 {/* <button className="bg-blue-500 text-white p-2 rounded" onClick={addGift}>
                   Agregar
@@ -117,16 +117,16 @@ export default function Home() {
                 <button className="ml-4 text-gray-600" onClick={() => setIsModalOpen(false)}>
                   Cancelar
                 </button> */}
-                <button className="bg-blue-500 text-white p-2 rounded" onClick={addGift}>
+                <button className="bg-blue-500 text-white p-2 rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out" onClick={addGift}>
                   {editIndex !== null ? 'Guardar cambios' : 'Agregar'}
                 </button>
-                <button className="ml-4 text-gray-600" onClick={() => { setIsModalOpen(false); setEditIndex(null); }}>
+                <button className="ml-4 text-gray-600 focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out" onClick={() => { setIsModalOpen(false); setEditIndex(null); }}>
                   Cancelar
                 </button>
               </div>
             </div>
           )}
-          <button className="m-8 p-2 text-black bg-white rounded" onClick={() => setIsModalOpen(true)}>
+          <button className="m-8 p-2 text-black bg-white rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out" onClick={() => setIsModalOpen(true)}>
             Agregar a la lista 🎁</button>
         </div>
 
@@ -152,26 +152,26 @@ export default function Home() {
               </div>
 
               <button
-                className="flex items-center justify-center p-2 w-4 h-2 m-2 rounded-full text-sm bg-white text-black"
+                className="flex items-center justify-center p-2 w-4 h-2 m-2 rounded-full text-sm bg-white text-black focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
                 onClick={() => updateQuantity(index, -1)}
               >
                 -
               </button>
               {gift.quantity}
               <button
-                className="flex items-center justify-center p-2 w-4 h-2 m-2 rounded-full text-sm bg-white text-black"
+                className="flex items-center justify-center p-2 w-4 h-2 m-2 rounded-full text-sm bg-white text-black focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
                 onClick={() => updateQuantity(index, 1)}
               >
                 +
               </button>
               <button
-                className="m-4 p-1 text-black bg-white rounded"
+                className="m-4 p-1 text-black bg-white rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
                 onClick={() => editGift(index)}
               >
                 Editar
               </button>
               <button
-                className="m-4 p-1 text-black bg-white  rounded"
+                className="m-4 p-1 text-black bg-white  rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
                 onClick={() => removeGift(index)}
               >
                 Quitar
@@ -180,7 +180,7 @@ export default function Home() {
           ))}
         </ul>
         {gifts.length > 0 ?
-          <button className="m-8 p-2 text-black bg-white rounded"
+          <button className="m-8 p-2 text-black bg-white rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
             onClick={() => removeAll()}>
             Borrar todos
           </button> :
