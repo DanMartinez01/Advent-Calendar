@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image';
 import axios from 'axios';
+import RandomGift from '../../components/RandomGift'
 
 export default function Home() {
 
@@ -19,6 +20,7 @@ export default function Home() {
   useEffect(() => {
     fetchGiftList();
   }, []);
+
 
   const fetchGiftList = async () => {
     try {
@@ -90,11 +92,77 @@ export default function Home() {
     setGifts([])
   }
   return (
-    <main className="flex min-h-screen  items-start justify-center" style={{ backgroundImage: "url('/christmas.jpg')" }}>
-      <div className="max-w-5xl w-full items-center justify-start font-mono text-sm lg:flex flex-col my-6">
-        <h1 className='mb-10 text-2xl'>Lista de regalos:</h1>
+    <main className="flex  flex-row min-h-screen  items-start justify-center"
+      style={{ backgroundImage: "url('/christmas.jpg')" }}>
+      <div className="max-w-5xl w-full items-center justify-start font-mono text-sm lg:flex flex-row my-10 ">
 
-        <div className='mb-6 flex flex-row '>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className='flex flex-col justify-center mt-10'>
+            <h1 className='text-center mb-10 text-2xl'>Lista de regalos:</h1>
+            <ul className=''>
+              {gifts.map((gift: string, index: number) => (
+                <li className='flex flex-row items-center justify-around text-lg'
+                  key={index}>
+                  <div className="bg-white rounded overflow-hidden shadow-lg w-50 h-30 p-2 my-2 flex flex-row">
+                    <Image
+                      loader={() => gift.imageUrl}
+                      src={gift.imageUrl}
+                      alt={gift.name}
+                      width={30}
+                      height={20}
+                      className="mt-1 w-full w-12 h-12 object-cover rounded-full"
+                      onError={(e) => {
+                        console.error("Error loading image:", e);
+                        console.error("Image URL:", gift.imageUrl);
+                      }}
+                    />
+                    <div className="px-1">
+                      <p className="text-gray-800 font-bold text-sm ">{gift.name}</p>
+                      <p className="text-gray-700 text-base">{gift.recipient}</p>
+                      <div className="flex  items-center justify-between mt-2">
+                        <div className="flex items-center space-x-2">
+                          <button
+                            className="text-sm bg-white text-black border border-gray-300  rounded-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
+                            onClick={() => updateQuantity(index, -1)}
+                          >
+                            -
+                          </button>
+                          <span className="text-sm text-black">{gift.quantity}</span>
+                          <button
+                            className="text-sm bg-white text-black border border-gray-300 rounded-full focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
+                            onClick={() => updateQuantity(index, 1)}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <div className="flex space-x-2 ml-2">
+                          <button
+                            className="bg-blue-500 text-white px-1 py-1 rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
+                            onClick={() => editGift(index)}
+                          >
+                            <p className="text-sm">Editar</p>
+                          </button>
+                          <button
+                            className="px-1 py-1 text-black bg-white border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
+                            onClick={() => removeGift(index)}
+                          >
+                            <p className="text-sm"> Quitar</p>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </li>
+              ))}
+              <RandomGift />
+            </ul>
+          </div>
+        )}
+        <div className='mx-auto flex flex-col mt-10'>
+
           {/* Modal */}
           {isModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -132,72 +200,16 @@ export default function Home() {
           )}
           <button className="m-8 p-2 text-black bg-white rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out" onClick={() => setIsModalOpen(true)}>
             Agregar a la lista 🎁</button>
+          {gifts.length > 0 ?
+            <button className="m-8 p-2 text-black bg-white rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
+              onClick={() => removeAll()}>
+              Borrar todos
+            </button> :
+            <h1>No hay regalos en la lista 🙁 Agrega uno!</h1>
+          }
         </div>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <div>
-            <ul className=''>
-              {gifts.map((gift: string, index: number) => (
-                <li className='flex flex-row items-center justify-around text-lg '
-                  key={index}>
-                  <div className='flex flex-row items-center justify-around bg-white w-[150px] p-2 rounded'>
-                    <p className='flex w-1/2 text-semibold text-black text-sm text-start mx-2'>{gift.recipient}</p>
-                    <Image
-                      loader={() => gift.imageUrl}
-                      src={gift.imageUrl}
-                      alt={gift.name}
-                      width={40}
-                      height={20}
-                      className=' w-10 h-10 rounded-full'
-                      onError={(e) => {
-                        console.error("Error loading image:", e);
-                        console.error("Image URL:", gift.imageUrl);
-                      }}
-                    />
-                    <p className='flex w-1/2 text-semibold text-black text-sm text-start mx-2'> {gift.name}</p>
-                  </div>
-
-                  <button
-                    className="flex items-center justify-center p-2 w-4 h-2 m-2 rounded-full text-sm bg-white text-black focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
-                    onClick={() => updateQuantity(index, -1)}
-                  >
-                    -
-                  </button>
-                  {gift.quantity}
-                  <button
-                    className="flex items-center justify-center p-2 w-4 h-2 m-2 rounded-full text-sm bg-white text-black focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
-                    onClick={() => updateQuantity(index, 1)}
-                  >
-                    +
-                  </button>
-                  <button
-                    className="m-4 p-1 text-black bg-white rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
-                    onClick={() => editGift(index)}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="m-4 p-1 text-black bg-white  rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
-                    onClick={() => removeGift(index)}
-                  >
-                    Quitar
-                  </button>
-                </li>
-              ))}
-            </ul>
-            {gifts.length > 0 ?
-              <button className="m-8 p-2 text-black bg-white rounded focus:outline-none focus:ring focus:border-blue-300 transition duration-300 ease-in-out"
-                onClick={() => removeAll()}>
-                Borrar todos
-              </button> :
-              <h1>No hay regalos en la lista 🙁 Agrega uno!</h1>
-            }
-
-          </div>
-        )}
       </div>
 
-    </main>
+    </main >
   )
 }
